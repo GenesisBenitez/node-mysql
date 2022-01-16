@@ -16,13 +16,13 @@ router.get("/getBook/:id", function(req, res){
 
 })
 router.post("/addBook", function(req,res){
-    bookdb.query(`insert into books(title,author,release_date)values(?,?,?)`, [`${req.body.title}`,`${req.body.author}`,`${req.body.release_date}`]);
+    bookdb.query(`insert into books(title,author,release_date)values(?,?,?)`, [req.body.title,req.body.author,req.body.release_date]);
     res.send({status: "Books successfully instered"});
 })
 router.put("/updateBook/:id", function(req,res){
     bookdb.query(
         'update books set title = ?, author = ?, release_date = ? where id = ?',
-        [`${req.body.title}`, `${req.body.author}`, `${req.body.release_date}`, `${req.params.id}`]);
+        [req.body.title, req.body.author, req.body.release_date, req.params.id]);
         res.send(req.body);
 })
 

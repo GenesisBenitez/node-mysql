@@ -8,6 +8,6 @@ a:hover{
     
 }
 
-.card:hover{
+.cardsForHome:hover{
     transform: scale(1.05);
 }
