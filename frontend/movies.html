@@ -17,7 +17,7 @@
     <div class="container-fluid">
       <a class="navbar-brand text-light px-4" href="#">
         <i class="fa fa-handshake-o text-light"></i>
-        MultiMedia</a>
+        HistoryMedia</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <i class="fa fa-bars text-light"></i>
         
@@ -45,7 +45,13 @@
           <li class="nav-item px-4">
             <a class="nav-link active text-light" aria-current="page" href="movies.html">
               <i class="fa fa-film text-light"></i>
-              Movies
+             All Movies
+            </a>
+          </li>
+          <li class="nav-item px-4">
+            <a class="nav-link active text-light" aria-current="page" href="postMovie.html">
+              <i class="fa fa-plus text-light"></i>
+             Add Movies
             </a>
           </li>
       </div>
@@ -68,8 +74,102 @@
    
   </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Edit Movie</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <form class="row g-3 needs-validation" novalidate id="editForm">
+            <div class="col-md-12" align="center">
+              <input type="hidden" id="movieId">
+            </div>
+            <div class="col-md-12" align="center">
+              <label for="validationCustom01" class="form-label">Title</label>
+              <input type="text" class="form-control" required id="title">
+              <div class="valid-feedback">
+                Looks good!
+              </div>
+            </div>
+            <div class="col-md-12" align="center">
+                <label for="validationCustom01" class="form-label">Director</label>
+                <input type="text" class="form-control" id="director" required>
+                <div class="valid-feedback">
+                  Looks good!
+                </div>
+              </div>
+              <div class="col-md-12" align="center">
+                <label for="validationCustom01" class="form-label">Release Date</label>
+                <input type="text" class="form-control" id="release_date" required>
+                <div class="valid-feedback">
+                  Looks good!
+                </div>
+              </div>
+            
+            <div class="col-12" align="center">
+              <button class="btn btn-primary" type="submit">Update Movie</button>
+            </div>
+          </form> 
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      
+      </div>
+    </div>
+  </div>
+</div>
+
 
 </body>
+<script>
+    function getMovieForEdit(id){
+        let movieId = $("#movieId")
+        let title = $("#title");
+        let director = $("#director");
+        let release_date = $("#release_date");
 
+        fetch(`http://localhost:3000/movies/getmovie/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            movieId.val(data[0].Id);
+            title.val(data[0].title);
+            director.val(data[0].director);
+            release_date.val(data[0].release_date)
+        })
+    }
+
+function deleteMovie(id){
+        fetch(`http://localhost:3000/movies/deletemovie/${id}`, {
+            method: "DELETE"
+        }).then(response => response.json())
+        .then(data => {
+            console.log(data);
+            displayMovies();
+        })
+  }
+
+
+    async function putMovie(url, data){
+        const response = await fetch(url, {
+            method: "PUT",
+            mode: 'cors',
+            cache: "no-cache",
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+            body: JSON.stringify(data)
+        });
+        return response.json();
+    }
+</script>
 </html>
 

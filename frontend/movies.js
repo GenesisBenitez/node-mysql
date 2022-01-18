@@ -1,10 +1,25 @@
 $(document).ready(function(){
-
     displayMovies();
+    $("#editForm").submit(function(e){
+        e.preventDefault();
+        let Id = $("#movieId").val();
+        let movieTitle = $("#title").val();
+        let movieDirector =$("#director").val();
+        let movieRelease_date = $("#release_date").val();
+        putMovie(`http://localhost:3000/movies/updatemovie/${Id}`,{
+            title: movieTitle, director: movieDirector, release_date: movieRelease_date
+        })
+        .then(response => {
+            console.log(response);
+            displayMovies();
+            $("#staticBackdrop").modal("hide");
+        })
+    })
 })
 function displayMovies(){
     const movies = $("#movies");
-    fetch("http://localhost:3000/movies/listAllMovies")
+    movies.empty();
+    fetch("http://localhost:3000/movies/listallmovies")
     .then(response => response.json())
     .then(data =>{
         for(let i = 0; i < data.length; i++){
@@ -18,7 +33,10 @@ function displayMovies(){
                     <h5 class="card-title">${data[i].title}</h5>
                     <p class="card-text">${data[i].director}</p>
                     <p class="card-text">${data[i].release_date}</p>
-                    <a href="#" class="btn btn-danger" onclick="deleteMovie(${data[i].Id})"><i class="fa fa-trash"></i> Delete Movie</button></a>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="getMovieForEdit(${data[i].Id})">
+                        <i class="fa fa-pencil"></i>
+                        </button>
+                    <button class="btn btn-danger" onclick="deleteMovie(${data[i].Id})"><i class="fa fa-trash"></i></button>
                   </div>
                  
                 </div>
@@ -28,4 +46,5 @@ function displayMovies(){
         }
         
     })
+
 }
